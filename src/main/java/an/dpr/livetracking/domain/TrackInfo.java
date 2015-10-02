@@ -58,4 +58,10 @@ public class TrackInfo {
 	this.participant = participant;
     }
 
+    @Override
+    public String toString() {
+	return "TrackInfo [id=" + id + ", gpsPoint=" + gpsPoint + ", date=" + date + ", participant=" + participant
+		+ "]";
+    }
+
 }
