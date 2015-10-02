@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/util 
+        http://www.springframework.org/schema/util/spring-util.xsd
+        http://www.springframework.org/schema/context 
+	    http://www.springframework.org/schema/context/spring-context.xsd">
+
+	
+
+	<context:annotation-config />
+	<!-- For Spring Data JPA -->
+	<import resource="classpath:repository-context.xml" />
+	<import resource="classpath:beans.xml" />
+	<!-- <import resource="classpath:spring-cron.xml"/>  -->
+	
+	<!--  POSTGRES -->
+	<bean id="springConfiguredDataSource" class="org.postgresql.ds.PGSimpleDataSource">
+		<property name="databaseName" value="litracydb" />
+		<property name="serverName" value="localhost" />
+		<property name="user" value="postgres" />
+		<property name="password" value="postgres" />
+	</bean>
+</beans>
