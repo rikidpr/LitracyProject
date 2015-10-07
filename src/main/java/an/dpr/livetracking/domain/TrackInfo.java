@@ -1,5 +1,6 @@
 package an.dpr.livetracking.domain;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -7,7 +8,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import an.dpr.livetracking.bean.GPSPoint;
 
@@ -15,9 +18,12 @@ import an.dpr.livetracking.bean.GPSPoint;
 @Table
 public class TrackInfo {
     private Long id;
-    private GPSPoint gpsPoint;
     private Date date;
     private Participant participant;
+    private BigDecimal lat;
+    private BigDecimal lon;
+    private String referenceSystem;// utm30n, wgs84 TODO enum!
+
 
 
     @Id
@@ -31,13 +37,17 @@ public class TrackInfo {
 	this.id = id;
     }
 
-    @Column
+
+    @Transient
     public GPSPoint getGpsPoint() {
-	return gpsPoint;
+	GPSPoint.Builder builder = new GPSPoint.Builder().setLat(lat).setLon(lon).setReferenceSystem(referenceSystem);
+	return builder.build();
     }
 
     public void setGpsPoint(GPSPoint gpsPoint) {
-	this.gpsPoint = gpsPoint;
+	this.lat = gpsPoint.getLat();
+	this.lon = gpsPoint.getLon();
+	this.referenceSystem = gpsPoint.getReferenceSystem();
     }
 
     @Column
@@ -49,7 +59,7 @@ public class TrackInfo {
 	this.date = date;
     }
 
-    @Column
+    @OneToOne
     public Participant getParticipant() {
 	return participant;
     }
@@ -57,11 +67,40 @@ public class TrackInfo {
     public void setParticipant(Participant participant) {
 	this.participant = participant;
     }
+    
+
+    @Column
+    public BigDecimal getLat() {
+        return lat;
+    }
+
+    public void setLat(BigDecimal lat) {
+        this.lat = lat;
+    }
+
+    @Column
+    public BigDecimal getLon() {
+        return lon;
+    }
+
+    public void setLon(BigDecimal lon) {
+        this.lon = lon;
+    }
+
+    @Column
+    public String getReferenceSystem() {
+        return referenceSystem;
+    }
+
+    public void setReferenceSystem(String referenceSystem) {
+        this.referenceSystem = referenceSystem;
+    }
+
 
     @Override
     public String toString() {
-	return "TrackInfo [id=" + id + ", gpsPoint=" + gpsPoint + ", date=" + date + ", participant=" + participant
-		+ "]";
+	return "TrackInfo [id=" + id + ", date=" + date + ", participant=" + participant + ", lat=" + lat + ", lon="
+		+ lon + ", referenceSystem=" + referenceSystem + "]";
     }
 
 }

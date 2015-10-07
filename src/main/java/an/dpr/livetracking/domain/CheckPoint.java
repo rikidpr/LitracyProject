@@ -1,11 +1,15 @@
 package an.dpr.livetracking.domain;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import an.dpr.livetracking.bean.GPSPoint;
 
@@ -15,9 +19,11 @@ public class CheckPoint {
 
     private Long id;
     private EventEdition event;
-    private GPSPoint gpsPoint;
     private String name;
     private int order;
+    private BigDecimal lat;
+    private BigDecimal lon;
+    private String referenceSystem;// utm30n, wgs84 TODO enum!
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
@@ -30,7 +36,7 @@ public class CheckPoint {
 	this.id = id;
     }
 
-    @Column
+    @ManyToOne
     public EventEdition getEvent() {
 	return event;
     }
@@ -39,13 +45,16 @@ public class CheckPoint {
 	this.event = event;
     }
 
-    @Column
+    @Transient
     public GPSPoint getGpsPoint() {
-	return gpsPoint;
+	GPSPoint.Builder builder = new GPSPoint.Builder().setLat(lat).setLon(lon).setReferenceSystem(referenceSystem);
+	return builder.build();
     }
 
     public void setGpsPoint(GPSPoint gpsPoint) {
-	this.gpsPoint = gpsPoint;
+	this.lat = gpsPoint.getLat();
+	this.lon = gpsPoint.getLon();
+	this.referenceSystem = gpsPoint.getReferenceSystem();
     }
 
     @Column
@@ -64,6 +73,33 @@ public class CheckPoint {
 
     public void setOrder(int order) {
 	this.order = order;
+    }
+
+    @Column
+    public BigDecimal getLat() {
+        return lat;
+    }
+
+    public void setLat(BigDecimal lat) {
+        this.lat = lat;
+    }
+
+    @Column
+    public BigDecimal getLon() {
+        return lon;
+    }
+
+    public void setLon(BigDecimal lon) {
+        this.lon = lon;
+    }
+
+    @Column
+    public String getReferenceSystem() {
+        return referenceSystem;
+    }
+
+    public void setReferenceSystem(String referenceSystem) {
+        this.referenceSystem = referenceSystem;
     }
 
 }

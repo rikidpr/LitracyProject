@@ -7,22 +7,18 @@
 		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd 
 		http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd">
 	
-	<!-- Beans del modelo de datos	
-	<bean id="...dao" class="an.dpr.livetracking......DAOSDJPA"/>
-	-->
+	<!-- Beans del modelo de datos	-->
+	<bean id="trackingBO" class="an.dpr.livetracking.bo.TrackingBO"/>
+	<bean id="trackingDAO" class="an.dpr.livetracking.dao.springdatajpa.TrackingSDJPADAO"/>
 	
 	
-	<!-- REST Services 
+	<!-- REST Services -->
 	 <jaxrs:server id="services" address="/">
         <jaxrs:serviceBeans>
-            <bean class="an.dpr.livetracking...RS"/>
-            <bean class="an.dpr.livetracking...RS"/>
-            <bean class="an.dpr.livetracking...RS"/>
-            <bean class="an.dpr.livetracking...RS"/>
+            <bean class="an.dpr.livetracking.services.rest.TrackingRS"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/> 
         </jaxrs:providers>
     </jaxrs:server>
-	-->
 </beans>

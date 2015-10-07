@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class ParticipantList {
@@ -47,7 +49,7 @@ public class ParticipantList {
 	this.description = description;
     }
 
-    @Column
+    @ManyToOne
     public EventEdition getEventEdition() {
 	return eventEdition;
     }
@@ -56,6 +58,7 @@ public class ParticipantList {
 	this.eventEdition = eventEdition;
     }
 
+    @OneToMany(targetEntity=Participant.class)
     public List<Participant> getParticipants() {
 	return participants;
     }
