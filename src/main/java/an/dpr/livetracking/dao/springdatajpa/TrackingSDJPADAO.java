@@ -9,7 +9,7 @@ import an.dpr.livetracking.domain.TrackInfo;
 import an.dpr.livetracking.repository.TrackInfoRepo;
 
 /**
- * @author saez
+ * @author andprsoft
  *
  */
 public class TrackingSDJPADAO implements ITrackingDAO {

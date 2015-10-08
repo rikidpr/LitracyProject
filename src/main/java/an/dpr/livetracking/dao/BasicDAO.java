@@ -6,7 +6,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 /**
  * superclass with the comun utilities
- * @author saez
+ * @author andprsoft
  *
  */
 public class BasicDAO {

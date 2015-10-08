@@ -9,7 +9,7 @@ import an.dpr.livetracking.domain.TrackInfo;
 
 /**
  * Class for tracking functions. W/O opoerations
- * @author saez
+ * @author andprsoft
  *
  */
 public class TrackingBO {

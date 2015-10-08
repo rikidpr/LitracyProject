@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import an.dpr.livetracking.bean.EventType;
@@ -37,7 +39,7 @@ public class EventEdition {
 	this.id = id;
     }
 
-    @Column
+    @ManyToOne
     public Event getEvent() {
 	return event;
     }
@@ -64,7 +66,7 @@ public class EventEdition {
 	this.name = name;
     }
 
-    @Column
+    @OneToMany
     public List<Participant> getParticipants() {
 	return participants;
     }

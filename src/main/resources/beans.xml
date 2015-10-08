@@ -9,13 +9,17 @@
 	
 	<!-- Beans del modelo de datos	-->
 	<bean id="trackingBO" class="an.dpr.livetracking.bo.TrackingBO"/>
+	<bean id="adminBO" class="an.dpr.livetracking.bo.AdminBO"/>
 	<bean id="trackingDAO" class="an.dpr.livetracking.dao.springdatajpa.TrackingSDJPADAO"/>
+	<bean id="eventsDAO" class="an.dpr.livetracking.dao.springdatajpa.EventSDJPADAO"/>
 	
 	
 	<!-- REST Services -->
 	 <jaxrs:server id="services" address="/">
         <jaxrs:serviceBeans>
             <bean class="an.dpr.livetracking.services.rest.TrackingRS"/>
+            <bean class="an.dpr.livetracking.services.rest.AdminRS"/>
+            <bean class="an.dpr.livetracking.services.rest.OAuth2RS"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/> 

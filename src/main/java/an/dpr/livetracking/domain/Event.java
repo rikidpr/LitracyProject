@@ -68,4 +68,10 @@ public class Event {
 	this.defaultType = defaultType;
     }
 
+    @Override
+    public String toString() {
+	return "Event [id=" + id + ", name=" + name + ", description=" + description + ", defaultSport=" + defaultSport
+		+ ", defaultType=" + defaultType + "]";
+    }
+
 }

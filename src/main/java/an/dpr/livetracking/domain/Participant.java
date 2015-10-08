@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -27,7 +29,7 @@ public class Participant {
 	this.id = id;
     }
 
-    @Column
+    @OneToOne
     public Person getPerson() {
 	return person;
     }
@@ -45,7 +47,7 @@ public class Participant {
 	this.dorsal = dorsal;
     }
 
-    @Column
+    @ManyToOne
     public ParticipantType getType() {
 	return type;
     }
@@ -54,7 +56,7 @@ public class Participant {
 	this.type = type;
     }
 
-    @Column //TODO ONETOMANY
+    @ManyToOne
     public EventEdition getEventEdition() {
         return eventEdition;
     }
