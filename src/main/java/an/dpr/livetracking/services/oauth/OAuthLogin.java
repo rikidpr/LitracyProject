@@ -1,16 +1,15 @@
-package an.dpr.livetracking.services.rest;
+package an.dpr.livetracking.services.oauth;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Properties;
 
 import javax.annotation.PostConstruct;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.core.Response;
+import javax.servlet.GenericServlet;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebServlet;
 
 import org.apache.oltu.oauth2.client.OAuthClient;
 import org.apache.oltu.oauth2.client.URLConnectionClient;
@@ -26,12 +25,15 @@ import org.apache.oltu.oauth2.common.message.types.GrantType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Path("/auth/")
-public class OAuth2RS {
+import an.dpr.livetracking.services.rest.OAuth2RS;
+
+@WebServlet(value="/authFacebookCallback", name="facebook-auth-servlet")
+public class OAuthLogin extends GenericServlet {
     
+    private static final long serialVersionUID = 1L;
     private static final Logger log = LoggerFactory.getLogger(OAuth2RS.class);
     private static final Properties properties = new Properties(); 
-
+    
     private String clientId;
     private String clientSecret;
     private String applicationHost;
@@ -55,20 +57,11 @@ public class OAuth2RS {
 	callbackUri = applicationHost + properties.getProperty("facebook.callbackUri");
     }
 
-
-    @GET
-    @Path("/facebook")
-    public Response startFacebookAuthentication() throws OAuthSystemException, URISyntaxException {
-	OAuthClientRequest request = OAuthClientRequest.authorizationProvider(OAuthProviderType.FACEBOOK)
-		.setClientId(clientId).setRedirectURI(callbackUri).buildQueryMessage();
-	return Response.temporaryRedirect(new URI(request.getLocationUri())).build();
-    }
-
-    @GET
-    @Path("/facebook/callback/{code}")
-    public void callback(@PathParam("code") String pCode) throws OAuthSystemException {
+    @Override
+    public void service(ServletRequest req, ServletResponse res)
+	    throws ServletException, IOException {
 	OAuthClientRequest request;
-	String code = pCode.substring(FACEBOOK_CODE_ID.length() - 1);
+	String code = req.getParameter("code");
 	try {
 	    request = OAuthClientRequest
 	                .tokenProvider(OAuthProviderType.FACEBOOK)
@@ -91,8 +84,6 @@ public class OAuth2RS {
 	    GitHubTokenResponse oAuthResponse = oAuthClient.accessToken(request, GitHubTokenResponse.class);
 	    
 
-	    //TODO si no falla, se da por logeado
-	    // app
 	    log.debug("Access Token: " + oAuthResponse.getAccessToken() + ", Expires in: "
 		    + oAuthResponse.getExpiresIn());
 	    
@@ -102,8 +93,12 @@ public class OAuth2RS {
 	    OAuthResourceResponse resourceResponse = oAuthClient.resource(bearerClientRequest, OAuth.HttpMethod.GET, OAuthResourceResponse.class);
 	    System.out.println(resourceResponse.getBody());
 	} catch (OAuthProblemException e) {
-	    System.out.println("OAuth error: " + e.getError());
-	    System.out.println("OAuth error description: " + e.getDescription());
+	    log.error("OAuth error: " + e.getError());
+	    log.error("OAuth error description: " + e.getDescription());
+	} catch (OAuthSystemException e) {
+	    log.error("Error autenticando", e);
 	}
+	
     }
+
 }
