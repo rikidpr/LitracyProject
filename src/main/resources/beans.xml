@@ -23,6 +23,11 @@
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/> 
+            <ref bean="authorizationFilter"/>
         </jaxrs:providers>
     </jaxrs:server>
+    
+    <bean id="authorizationFilter" class="org.apache.cxf.jaxrs.security.SimpleAuthorizingFilter">
+	    <property name="methodRolesMap" ref="rolesMap"/>
+	</bean>
 </beans>

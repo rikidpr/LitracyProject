@@ -54,8 +54,12 @@ public class EventSDJPADAO implements IEventDAO {
 
     @Override
     public List<Event> getEvents(EventSearch es) {
-	// TODO Auto-generated method stub
-	return null;
+	// TODO MEJORAR, AHORA SOLO BUSCA POR NOMBRE
+	List<Event> list = null;
+	if (es.getName()!=null){
+	    list = eventRepo.findByNameLike(es.getName());
+	}
+	return list;
     }
 
     @Override
