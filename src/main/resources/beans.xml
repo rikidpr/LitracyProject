@@ -1,32 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:jaxrs="http://cxf.apache.org/jaxrs"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd 
 		http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd">
-	
-	<!-- Beans del modelo de datos	-->
-	<bean id="trackingBO" class="an.dpr.livetracking.bo.TrackingBO"/>
-	<bean id="adminBO" class="an.dpr.livetracking.bo.AdminBO"/>
-	<bean id="trackingDAO" class="an.dpr.livetracking.dao.springdatajpa.TrackingSDJPADAO"/>
-	<bean id="eventsDAO" class="an.dpr.livetracking.dao.springdatajpa.EventSDJPADAO"/>
-	
-	
+
+	<!-- Beans del modelo de datos -->
+	<bean id="trackingBO" class="an.dpr.livetracking.bo.TrackingBO" />
+	<bean id="adminBO" class="an.dpr.livetracking.bo.AdminBO" />
+	<bean id="trackingDAO" class="an.dpr.livetracking.dao.springdatajpa.TrackingSDJPADAO" />
+	<bean id="eventsDAO" class="an.dpr.livetracking.dao.springdatajpa.EventSDJPADAO" />
+
+
 	<!-- REST Services -->
-	 <jaxrs:server id="services" address="/">
-        <jaxrs:serviceBeans>
-            <bean class="an.dpr.livetracking.services.rest.TrackingRS"/>
-            <bean class="an.dpr.livetracking.services.rest.AdminRS"/>
-            <bean class="an.dpr.livetracking.services.rest.OAuth2RS"/>
-        </jaxrs:serviceBeans>
-        <jaxrs:providers>
-            <bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/> 
-            <ref bean="authorizationFilter"/>
-        </jaxrs:providers>
-    </jaxrs:server>
-    
-    <bean id="authorizationFilter" class="org.apache.cxf.rs.security.oauth2.filters.OAuthRequestFilter">
+	<jaxrs:server id="services" address="/">
+		<jaxrs:serviceBeans>
+			<bean class="an.dpr.livetracking.services.rest.TrackingRS" />
+			<bean class="an.dpr.livetracking.services.rest.AdminRS" />
+			<bean class="an.dpr.livetracking.services.rest.OAuth2RS" />
+		</jaxrs:serviceBeans>
+		<jaxrs:providers>
+			<bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider" />
+			<ref bean="oauthFiler" />
+		</jaxrs:providers>
+	</jaxrs:server>
+
+	<bean id="oauthProvider" class="an.dpr.livetracking.services.oauth.LitracyOauthProvider" />
+	<bean id="oauthFiler"
+		class="org.apache.cxf.rs.security.oauth2.filters.OAuthRequestFilter">
+		<property name="dataProvider" ref="oauthProvider" />
 	</bean>
 </beans>

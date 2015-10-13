@@ -15,7 +15,7 @@ public class Tests {
     }
 
     private static void buscarEventos() throws Exception {
-	Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("proxy.sdc.hp.com", 8080));
+	//Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("url proxy", 8080));
 	String urlBuscaEventos = "http://localhost:8282/rest/events/prueba/CYCLING/ROAD_CYCLING";
 	URL url = new URL(urlBuscaEventos);
 //	HttpURLConnection uc = (HttpURLConnection) url.openConnection(proxy);
