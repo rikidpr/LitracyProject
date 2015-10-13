@@ -32,11 +32,11 @@
             <version>${jackson.version}</version>
         </dependency>
         <!-- OAuth2 -->
-        <!-- <dependency>
+        <dependency>
 		  	<groupId>org.apache.cxf</groupId>
 		  	<artifactId>cxf-rt-rs-security-oauth2</artifactId>
             <version>${cxf.version}</version>
-		</dependency>-->
+		</dependency>
 		<dependency>
 		    <groupId>org.apache.oltu.oauth2</groupId>
 		    <artifactId>org.apache.oltu.oauth2.client</artifactId>

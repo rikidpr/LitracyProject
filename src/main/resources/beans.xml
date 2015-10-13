@@ -27,7 +27,6 @@
         </jaxrs:providers>
     </jaxrs:server>
     
-    <bean id="authorizationFilter" class="org.apache.cxf.jaxrs.security.SimpleAuthorizingFilter">
-	    <property name="methodRolesMap" ref="rolesMap"/>
+    <bean id="authorizationFilter" class="org.apache.cxf.rs.security.oauth2.filters.OAuthRequestFilter">
 	</bean>
 </beans>
