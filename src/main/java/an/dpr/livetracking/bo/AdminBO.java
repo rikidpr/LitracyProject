@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import an.dpr.livetracking.bean.EventEditionSearch;
 import an.dpr.livetracking.bean.EventSearch;
 import an.dpr.livetracking.dao.IEventDAO;
+import an.dpr.livetracking.dao.IParticipantDAO;
 import an.dpr.livetracking.domain.Event;
 import an.dpr.livetracking.domain.EventEdition;
 
@@ -24,38 +25,39 @@ import an.dpr.livetracking.domain.EventEdition;
 public class AdminBO {
     
     private static final Logger log = LoggerFactory.getLogger(AdminBO.class);
-    @Autowired IEventDAO dao;
+    @Autowired IEventDAO eventDao;
+    @Autowired IParticipantDAO participantDao;
     
     public Event persistEvent(Event event) {
-	return dao.persistEvent(event);
+	return eventDao.persistEvent(event);
     }
 
     public boolean deleteEvent(Long eventId) {
-	return dao.deleteEvent(eventId);
+	return eventDao.deleteEvent(eventId);
     }
 
     public Event getEvent(Long eventId) {
-	return dao.getEvent(eventId);
+	return eventDao.getEvent(eventId);
     }
 
     public List<Event> getEvents(EventSearch es) {
-	return dao.getEvents(es);
+	return eventDao.getEvents(es);
     }
 
     public EventEdition persistEventEdition(EventEdition edition) {
-	return dao.persistEventEdition(edition);
+	return eventDao.persistEventEdition(edition);
     }
 
     public boolean deleteEventEdition(Long editionId) {
-	return dao.deleteEventEdition(editionId);
+	return eventDao.deleteEventEdition(editionId);
     }
 
     public EventEdition getEventEdition(Long editionId) {
-	return dao.getEventEdition(editionId);
+	return eventDao.getEventEdition(editionId);
     }
 
     public List<EventEdition> getEventEditions(EventEditionSearch editionSearch) {
-	return dao.getEventEditions(editionSearch);
+	return eventDao.getEventEditions(editionSearch);
     }
 
 }

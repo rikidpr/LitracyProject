@@ -6,6 +6,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 /**
  * superclass with the comun utilities
+ * for lazy load
  * @author andprsoft
  *
  */
