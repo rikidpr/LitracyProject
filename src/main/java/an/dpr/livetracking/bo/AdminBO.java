@@ -12,6 +12,8 @@ import an.dpr.livetracking.dao.IEventDAO;
 import an.dpr.livetracking.dao.IParticipantDAO;
 import an.dpr.livetracking.domain.Event;
 import an.dpr.livetracking.domain.EventEdition;
+import an.dpr.livetracking.domain.Participant;
+import an.dpr.livetracking.domain.Person;
 
 /**
     TODO addEvent & CRUD
@@ -58,6 +60,36 @@ public class AdminBO {
 
     public List<EventEdition> getEventEditions(EventEditionSearch editionSearch) {
 	return eventDao.getEventEditions(editionSearch);
+    }
+    
+    public Participant getParticipant(Long participantId) {
+	log.debug("inicio");
+	return participantDao.getParticipant(participantId);
+    }
+    
+    public Participant persistParticipant(Participant participant) {
+	log.debug("inicio");
+	return participantDao.persistParticipant(participant);
+    }
+
+    public void deleteParticipant(Long participantId) {
+	log.debug("inicio");
+	participantDao.deleteParticipant(participantId);
+    }
+
+    public List<Participant> getParticipants(EventEdition e) {
+	log.debug("inicio");
+	return participantDao.getParticipants(e);
+    }
+    
+    public Person savePerson(Person person){
+	log.debug("inicio");
+	return participantDao.persistPerson(person);
+    }
+    
+    public void deletePerson(Long personId){
+	log.debug("inicio");
+	participantDao.deletePerson(personId);
     }
 
 }

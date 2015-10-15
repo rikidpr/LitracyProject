@@ -4,6 +4,6 @@ import an.dpr.livetracking.domain.TrackInfo;
 
 public interface ITrackingDAO {
     
-    boolean setTrackInfo(TrackInfo trackInfo);
+    TrackInfo persistTrackInfo(TrackInfo trackInfo);
 
 }

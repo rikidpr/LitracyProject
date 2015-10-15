@@ -3,7 +3,9 @@ package an.dpr.livetracking.services.rest;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import an.dpr.livetracking.bean.GPSPoint;
 import an.dpr.livetracking.bean.GPSPoint.Builder;
+import an.dpr.livetracking.bean.TrackInfoList;
 import an.dpr.livetracking.bo.TrackingBO;
 import an.dpr.livetracking.domain.Participant;
 import an.dpr.livetracking.domain.TrackInfo;
@@ -26,13 +29,38 @@ public class TrackingRS {
     private static final Logger log = LoggerFactory.getLogger(TrackingRS.class);
     @Autowired private TrackingBO bo;
 
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/postTrackInfo/")
+    public TrackInfo postTrackInfo(TrackInfo trackInfo){
+	log.debug(trackInfo.toString());
+	return bo.persistTrackInfo(trackInfo);
+    }
+    
+    
+    /**
+     * Return the number of track list persisted
+     * @param trackInfoList
+     * @return
+     */
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/postTrackInfoList/")
+    public Integer postTrackInfoList(TrackInfoList trackInfoList){
+	log.debug(trackInfoList.toString());
+	return bo.persistTrackInfoList(trackInfoList.getTrackInfoList());
+    }
+    
     /**
      * Carga de unico trackinfo, para app movil
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/trackInfo/{lat},{lon},{timestamp},{participantId}")
-    public Boolean setTrackInfo(
+    @Deprecated //TODO USE POST METHOD, THIS IS ONLY FOR TESTS
+    public TrackInfo setTrackInfo(
 	    @PathParam("lat") String lat,
 	    @PathParam("lon") String lon,
 	    @PathParam("timestamp") String timestamp,
@@ -40,9 +68,10 @@ public class TrackingRS {
 	    ) {
 	log.debug("inicio");
 	TrackInfo trackInfo = createTrackInfo(lat, lon, timestamp, participantId);
-	return bo.setTrackInfo(trackInfo);
+	return bo.persistTrackInfo(trackInfo);
     }
 
+    @Deprecated
     private TrackInfo createTrackInfo(String lat, String lon, String timestamp, String participantId) {
 	log.debug("inicio");
 	TrackInfo bean = null;
@@ -67,6 +96,7 @@ public class TrackingRS {
      * @param participantId
      * @return
      */
+    @Deprecated
     private boolean validateInputTrackInfo(String lat, String lon, String timestamp, String participantId) {
 	boolean valido = false;
 	

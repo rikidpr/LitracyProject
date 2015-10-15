@@ -11,6 +11,7 @@
 	<bean id="adminBO" class="an.dpr.livetracking.bo.AdminBO" />
 	<bean id="trackingDAO" class="an.dpr.livetracking.dao.springdatajpa.TrackingSDJPADAO" />
 	<bean id="eventsDAO" class="an.dpr.livetracking.dao.springdatajpa.EventSDJPADAO" />
+	<bean id="participantDAO" class="an.dpr.livetracking.dao.springdatajpa.ParticipantSDJPADAO" />
 
 
 	<!-- REST Services -->

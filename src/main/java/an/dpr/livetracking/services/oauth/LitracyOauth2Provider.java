@@ -45,8 +45,9 @@ public class LitracyOauth2Provider extends AbstractOAuthDataProvider{
 	accessToken.setGrantType("ALL");
 	UserSubject subject = new UserSubject("Fulano");
 	accessToken.setSubject(subject);
-//	indica la "audiencia" permitida pro este token, todavia no tengo muy claro de que manera se puede identificar dicha audiencia, si con una url, un mnombre...
-	accessToken.setAudience("appTesteadoraProboneira"); 
+//	indica la "audiencia" de este token, todavia no tengo muy claro de que manera se puede identificar dicha audiencia, si con una url, un mnombre...
+	//
+//	accessToken.setAudience("appTesteadoraProboneira"); 
 //        accessToken.setApprovedScope(Arrays.asList("admin","tracking","live"));
 	oauthTokens.put("fulanakoTokenDeAcceso", accessToken);
 	userAuthorizedClients.putSingle("clientIdDeFulano", "secretoDeFulano");

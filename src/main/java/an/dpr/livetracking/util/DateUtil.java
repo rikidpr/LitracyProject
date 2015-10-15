@@ -23,6 +23,7 @@ import an.dpr.livetracking.exception.LiveTrackingException;
 public class DateUtil {
     
     private static final Logger log = LoggerFactory.getLogger(DateUtil.class);
+    
     // DATE PATTERNS
     public static final String DDMMYYYY = "ddMMyyyy";
     public static final String DD_MM_YYYY_DOT = "dd.MM.yyyy";
@@ -58,6 +59,7 @@ public class DateUtil {
     public static final String DD_MMM_YYYY_SPACE = "dd MMM yyyy";
     public static final String JSON_DATE = "E, dd MMM yyyy HH:mm:ssZ";
 
+    private static final String DEFAULT_FORMAT = YYYYMMDD;
     private static final Map<String, SimpleDateFormat> formatters = new HashMap<String, SimpleDateFormat>();
     private static boolean initialized = false;
 
@@ -119,6 +121,14 @@ public class DateUtil {
 	    formatters.put(pattern, sdf);
 	}
 	return sdf;
+    }
+    
+    public static String format(Date date) throws LiveTrackingException{
+	return format(date, DEFAULT_FORMAT);
+    }
+    
+    public static Date parse(String date) throws LiveTrackingException{
+	return parse(date, DEFAULT_FORMAT);
     }
 
     /**

@@ -18,11 +18,9 @@ public class TrackingSDJPADAO implements ITrackingDAO {
     @Autowired TrackInfoRepo repo;
 
     @Override
-    public boolean setTrackInfo(TrackInfo trackInfo) {
+    public TrackInfo persistTrackInfo(TrackInfo trackInfo) {
 	log.debug("persist "+trackInfo);
-	TrackInfo result = repo.save(trackInfo);
-	log.debug("persist result "+result);
-	return result != null;
+	return repo.save(trackInfo);
     }
 
 }
