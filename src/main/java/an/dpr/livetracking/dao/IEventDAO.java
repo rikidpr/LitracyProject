@@ -16,7 +16,7 @@ public interface IEventDAO {
 
     Event persistEvent(Event event);
     
-    boolean deleteEvent(Long eventId);
+    void deleteEvent(Long eventId);
     
     Event getEvent(Long eventId);
     
@@ -24,7 +24,7 @@ public interface IEventDAO {
     
     EventEdition persistEventEdition(EventEdition edition);
     
-    boolean deleteEventEdition(Long editionId);
+    void deleteEventEdition(Long editionId);
     
     EventEdition getEventEdition(Long editionId);
     

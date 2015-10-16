@@ -34,16 +34,9 @@ public class EventSDJPADAO implements IEventDAO {
     }
 
     @Override
-    public boolean deleteEvent(Long eventId) {
+    public void deleteEvent(Long eventId) {
 	log.debug("delete "+eventId);
-	boolean ret = false;
-	try{
-	    eventRepo.delete(eventId);
-	    ret = true;
-	} catch(DataAccessException e){
-	    log.error("error deleting "+eventId, e);
-	}
-	return ret;
+	eventRepo.delete(eventId);
     }
 
     @Override
@@ -70,15 +63,8 @@ public class EventSDJPADAO implements IEventDAO {
     }
 
     @Override
-    public boolean deleteEventEdition(Long editionId) {
-	boolean deleted = false;
-	try{
-	    eventEditionRepo.delete(editionId);
-	    deleted = true;
-	} catch(DataAccessException e){
-	    log.error("error deleting "+editionId);
-	}
-	return deleted;
+    public void deleteEventEdition(Long editionId) {
+	eventEditionRepo.delete(editionId);
     }
 
     @Override

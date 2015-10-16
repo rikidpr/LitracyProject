@@ -36,7 +36,13 @@ public class AdminBO {
     }
 
     public boolean deleteEvent(Long eventId) {
-	return eventDao.deleteEvent(eventId);
+	try{
+	    eventDao.deleteEvent(eventId);
+	    return true;
+	} catch(DataAccessException e){
+	    log.error("error deleting event "+eventId, e);
+	    return false;
+	}
     }
 
     public Event getEvent(Long eventId) {
@@ -52,7 +58,13 @@ public class AdminBO {
     }
 
     public boolean deleteEventEdition(Long editionId) {
-	return eventDao.deleteEventEdition(editionId);
+	try{
+	    eventDao.deleteEventEdition(editionId);
+	    return true;
+	} catch(DataAccessException e){
+	    log.error("error deleting eventEdition "+editionId, e);
+	    return false;
+	}
     }
 
     public EventEdition getEventEdition(Long editionId) {
@@ -94,9 +106,15 @@ public class AdminBO {
 	return participantDao.persistPerson(person);
     }
     
-    public void deletePerson(Long personId){
+    public boolean deletePerson(Long personId){
 	log.debug("inicio");
-	participantDao.deletePerson(personId);
+	try{
+	    participantDao.deletePerson(personId);
+	    return true;
+	} catch(DataAccessException e){
+	    log.error("error deleting person "+personId, e);
+	    return false;
+	}
     }
 
 }
