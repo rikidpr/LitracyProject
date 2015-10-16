@@ -17,7 +17,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import an.dpr.livetracking.exception.LiveTrackingException;
+import an.dpr.livetracking.exception.LitracyException;
 
 
 public class DateUtil {
@@ -123,11 +123,11 @@ public class DateUtil {
 	return sdf;
     }
     
-    public static String format(Date date) throws LiveTrackingException{
+    public static String format(Date date) throws LitracyException{
 	return format(date, DEFAULT_FORMAT);
     }
     
-    public static Date parse(String date) throws LiveTrackingException{
+    public static Date parse(String date) throws LitracyException{
 	return parse(date, DEFAULT_FORMAT);
     }
 
@@ -141,19 +141,19 @@ public class DateUtil {
      * @param pattern
      *            <code>String</code>
      * @return <code>String</code>
-     * @throws LiveTrackingException
+     * @throws LitracyException
      */
-    public static String format(Date date, String pattern) throws LiveTrackingException {
+    public static String format(Date date, String pattern) throws LitracyException {
 	String result = null;
 	if (date == null) {
-	    throw new LiveTrackingException("Fecha a formatear en cadena no recibida.");
+	    throw new LitracyException("Fecha a formatear en cadena no recibida.");
 	} else if (pattern == null || pattern.isEmpty()) {
-	    throw new LiveTrackingException("Patron para formatear fecha no recibido.");
+	    throw new LitracyException("Patron para formatear fecha no recibido.");
 	} else {
 	    initialize();
 	    SimpleDateFormat sdf = formatters.get(pattern);
 	    if (sdf == null) {
-		throw new LiveTrackingException("Patron para formatear fecha no reconocido: " + pattern);
+		throw new LitracyException("Patron para formatear fecha no reconocido: " + pattern);
 	    } else {
 		result = sdf.format(date);
 	    }
@@ -173,21 +173,21 @@ public class DateUtil {
      * @param patternTime
      *            <code>String</code>
      * @return <code>String</code>
-     * @throws LiveTrackingException
+     * @throws LitracyException
      */
-    public static String format(Date date, String patternDate, String patternTime) throws LiveTrackingException {
+    public static String format(Date date, String patternDate, String patternTime) throws LitracyException {
 	String result = null;
 	if (date == null) {
-	    throw new LiveTrackingException("Fecha a formatear en cadena no recibida.");
+	    throw new LitracyException("Fecha a formatear en cadena no recibida.");
 	} else if ((patternDate == null || patternDate.isEmpty()) || (patternTime == null || patternTime.isEmpty())) {
-	    throw new LiveTrackingException("Patron para formatear fecha u hora no recibido.");
+	    throw new LitracyException("Patron para formatear fecha u hora no recibido.");
 	} else {
 	    initialize();
 	    String fullPattern = patternDate + " " + patternTime;
 	    SimpleDateFormat sdf = (formatters.containsKey(fullPattern)) ? formatters.get(fullPattern)
 		    : getFormatter(fullPattern);
 	    if (sdf == null) {
-		throw new LiveTrackingException("Patron para formatear fecha y hora no reconocido: " + fullPattern);
+		throw new LitracyException("Patron para formatear fecha y hora no reconocido: " + fullPattern);
 	    } else {
 		result = sdf.format(date);
 	    }
@@ -205,25 +205,25 @@ public class DateUtil {
      * @param pattern
      *            <code>String</code>
      * @return <code>Date</code>
-     * @throws LiveTrackingException
+     * @throws LitracyException
      */
-    public static Date parse(String date, String pattern) throws LiveTrackingException {
+    public static Date parse(String date, String pattern) throws LitracyException {
 	Date result = null;
 	if (date == null || date.isEmpty()) {
 
-	    throw new LiveTrackingException("Cadena a parsear en fecha no recibida.");
+	    throw new LitracyException("Cadena a parsear en fecha no recibida.");
 	} else if (pattern == null || pattern.isEmpty()) {
-	    throw new LiveTrackingException("Patron para parsear fecha no recibido.");
+	    throw new LitracyException("Patron para parsear fecha no recibido.");
 	} else {
 	    initialize();
 	    SimpleDateFormat sdf = formatters.get(pattern);
 	    if (sdf == null) {
-		throw new LiveTrackingException("Patron para parsear fecha no reconocido: " + pattern);
+		throw new LitracyException("Patron para parsear fecha no reconocido: " + pattern);
 	    } else {
 		try {
 		    result = sdf.parse(date);
 		} catch (ParseException pe) {
-		    throw new LiveTrackingException("Error al parsear fecha [" + date + "][" + pattern + "]: "
+		    throw new LitracyException("Error al parsear fecha [" + date + "][" + pattern + "]: "
 			    + pe.getMessage(), pe);
 		}
 	    }
@@ -242,26 +242,26 @@ public class DateUtil {
      * @param patternTime
      *            <code>String</code>
      * @return <code>Date</code>
-     * @throws LiveTrackingException
+     * @throws LitracyException
      */
-    public static Date parse(String date, String patternDate, String patternTime) throws LiveTrackingException {
+    public static Date parse(String date, String patternDate, String patternTime) throws LitracyException {
 	Date result = null;
 	if (date == null || date.isEmpty()) {
-	    throw new LiveTrackingException("Cadena a parsear en fecha y hora no recibida.");
+	    throw new LitracyException("Cadena a parsear en fecha y hora no recibida.");
 	} else if ((patternDate == null || patternDate.isEmpty()) || (patternTime == null || patternTime.isEmpty())) {
-	    throw new LiveTrackingException("Patron para parsear fecha u hora no recibido.");
+	    throw new LitracyException("Patron para parsear fecha u hora no recibido.");
 	} else {
 	    initialize();
 	    String fullPattern = patternDate + " " + patternTime;
 	    SimpleDateFormat sdf = (formatters.containsKey(fullPattern)) ? formatters.get(fullPattern)
 		    : getFormatter(fullPattern);
 	    if (sdf == null) {
-		throw new LiveTrackingException("Patron para parsear fecha y hora no reconocido: " + fullPattern);
+		throw new LitracyException("Patron para parsear fecha y hora no reconocido: " + fullPattern);
 	    } else {
 		try {
 		    result = sdf.parse(date);
 		} catch (ParseException pe) {
-		    throw new LiveTrackingException("Error al parsear fecha y hora [" + date + "][" + fullPattern + "]: "
+		    throw new LitracyException("Error al parsear fecha y hora [" + date + "][" + fullPattern + "]: "
 			    + pe.getMessage(), pe);
 		}
 	    }
@@ -279,10 +279,10 @@ public class DateUtil {
      * @param pattern
      *            <code>String</code>
      * @return <code>XMLGregorianCalendar</code>
-     * @throws LiveTrackingException
+     * @throws LitracyException
      */
     public static XMLGregorianCalendar parseToXMLGregorianCalendar(String date, String patternDate)
-	    throws LiveTrackingException {
+	    throws LitracyException {
 	return parseToXMLGregorianCalendar(date, patternDate, FormatoJaxWS.XS_DATE);
     }
 
@@ -299,17 +299,17 @@ public class DateUtil {
      *            <code>FormatoJaxWS</code> Formato en el que se mapea el obj
      *            XMLGregorianCalendar en soap
      * @return <code>XMLGregorianCalendar</code>
-     * @throws LiveTrackingException
+     * @throws LitracyException
      */
     public static XMLGregorianCalendar parseToXMLGregorianCalendar(String date, String patternDate, FormatoJaxWS formato)
-	    throws LiveTrackingException {
+	    throws LitracyException {
 	try {
 	    Date fecha = parse(date, patternDate);
 	    GregorianCalendar gregorian = new GregorianCalendar();
 	    gregorian.setTime(fecha);
 	    return newXMLGregorianCalendar(gregorian, formato);
 	} catch (Exception e) {
-	    throw new LiveTrackingException("excepcion obteniendo xml gregorian calendar", e);
+	    throw new LitracyException("excepcion obteniendo xml gregorian calendar", e);
 	}
     }
 
@@ -320,9 +320,9 @@ public class DateUtil {
      * @param date
      *            <code>java.util.Date</code>
      * @return <code>XMLGregorianCalendar</code>
-     * @throws LiveTrackingException
+     * @throws LitracyException
      */
-    public static XMLGregorianCalendar parseToXMLGregorianCalendar(Date fecha) throws LiveTrackingException {
+    public static XMLGregorianCalendar parseToXMLGregorianCalendar(Date fecha) throws LitracyException {
 	return parseToXMLGregorianCalendar(fecha, FormatoJaxWS.XS_DATE);
     }
 
@@ -336,16 +336,16 @@ public class DateUtil {
      *            <code>FormatoJaxWS</code> Formato en el que se mapea el obj
      *            XMLGregorianCalendar en soap
      * @return <code>XMLGregorianCalendar</code>
-     * @throws LiveTrackingException
+     * @throws LitracyException
      */
     public static XMLGregorianCalendar parseToXMLGregorianCalendar(Date fecha, FormatoJaxWS formato)
-	    throws LiveTrackingException {
+	    throws LitracyException {
 	try {
 	    GregorianCalendar gregorian = new GregorianCalendar();
 	    gregorian.setTime(fecha);
 	    return newXMLGregorianCalendar(gregorian, formato);
 	} catch (Exception e) {
-	    throw new LiveTrackingException("", e);
+	    throw new LitracyException("", e);
 	}
     }
 

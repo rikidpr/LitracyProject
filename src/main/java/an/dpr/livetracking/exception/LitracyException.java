@@ -1,6 +1,6 @@
 package an.dpr.livetracking.exception;
 
-public class LiveTrackingException extends Exception {
+public class LitracyException extends Exception {
     
     private static final long serialVersionUID = 2679441615597498530L;
 
@@ -8,20 +8,20 @@ public class LiveTrackingException extends Exception {
     
     private int code;
     
-    public LiveTrackingException(String msg) {
+    public LitracyException(String msg) {
 	super(msg);
     }
     
-    public LiveTrackingException(String msg, Throwable e) {
+    public LitracyException(String msg, Throwable e) {
 	super(msg, e);
     }
 
-    public LiveTrackingException(int code, String msg, Throwable e) {
+    public LitracyException(int code, String msg, Throwable e) {
 	this(msg, e);
 	this.code = code; 
     }
 
-    public LiveTrackingException(int code) {
+    public LitracyException(int code) {
 	super();
 	this.code = code; 
     }

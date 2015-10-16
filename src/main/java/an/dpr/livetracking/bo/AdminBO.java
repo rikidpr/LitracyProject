@@ -5,6 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 
 import an.dpr.livetracking.bean.EventEditionSearch;
 import an.dpr.livetracking.bean.EventSearch;
@@ -72,9 +73,15 @@ public class AdminBO {
 	return participantDao.persistParticipant(participant);
     }
 
-    public void deleteParticipant(Long participantId) {
+    public boolean deleteParticipant(Long participantId) {
 	log.debug("inicio");
-	participantDao.deleteParticipant(participantId);
+	try{
+	    participantDao.deleteParticipant(participantId);
+	    return true;
+	} catch(DataAccessException e){
+	    log.error("Error deleting participantID "+participantId, e);
+	    return false;
+	}
     }
 
     public List<Participant> getParticipants(EventEdition e) {

@@ -3,6 +3,7 @@ package an.dpr.livetracking.services.rest;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -22,8 +23,11 @@ import an.dpr.livetracking.bo.AdminBO;
 import an.dpr.livetracking.domain.Event;
 import an.dpr.livetracking.domain.EventEdition;
 import an.dpr.livetracking.domain.Participant;
-import an.dpr.livetracking.domain.Person;
-import an.dpr.livetracking.exception.LiveTrackingException;
+import an.dpr.livetracking.exception.LitracyException;
+import an.dpr.livetracking.services.rest.dto.EventDTO;
+import an.dpr.livetracking.services.rest.dto.EventEditionDTO;
+import an.dpr.livetracking.services.rest.dto.ParticipantDTO;
+import an.dpr.livetracking.services.rest.dto.PersonDTO;
 import an.dpr.livetracking.util.DateUtil;
 
 @Path("/admin/")
@@ -32,9 +36,31 @@ public class AdminRS {
     private static final Logger log = LoggerFactory.getLogger(AdminRS.class);
     @Autowired private AdminBO bo;
     
+    @POST
+    @Path("/postEvent/")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public EventDTO addEvent(EventDTO event){
+	log.debug("params: "+event);
+	return new EventDTO(bo.persistEvent(event.createEvent()));
+    }
+
+    @PUT
+    @Path("/putEvent/")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public EventDTO updateEvent(EventDTO event){
+	log.debug("params: "+event);
+	if (event.id != null)
+	    return new EventDTO(bo.persistEvent(event.createEvent()));
+	else 
+	    return new EventDTO();
+    }
+    
     @GET
     @Path("/persistEvent/{id},{name},{description},{defaultSport},{defaultType}")
     @Produces(MediaType.APPLICATION_JSON)
+    @Deprecated
     public Event persistEvent(
         	@PathParam("id") String id,
         	@PathParam("name") String name,
@@ -46,6 +72,7 @@ public class AdminRS {
 	return bo.persistEvent(event);
     }
 
+    @Deprecated
     private Event getEvent(String id, String name, String description, String defaultSport, String defaultType) {
 	Event event = new Event();
 	if (id != null && !id.isEmpty()){
@@ -86,6 +113,42 @@ public class AdminRS {
 	return query;
     }
     
+    @POST
+    @Path("/postEventEdition/")
+    @Produces(MediaType.APPLICATION_JSON)
+    public EventEditionDTO addEventEdition(EventEditionDTO eventEdition){
+	log.debug("params: "+eventEdition);
+	if (eventEdition.sport == null || eventEdition.type == null){
+	    Event event = bo.getEvent(eventEdition.eventId);
+	    if (eventEdition.sport == null)
+		eventEdition.sport = event.getDefaultSport();
+	    if (eventEdition.type == null){
+		eventEdition.type = event.getDefaultType();
+	    }
+	}
+	return new EventEditionDTO(bo.persistEventEdition(eventEdition.createEventEdition()));
+    }
+    
+    @PUT
+    @Path("/putEventEdition/")
+    @Produces(MediaType.APPLICATION_JSON)
+    public EventEditionDTO updateEventEdition(EventEditionDTO eventEdition){
+	log.debug("params: "+eventEdition);
+	if (eventEdition.id != null) {
+	    if (eventEdition.sport == null || eventEdition.type == null){
+		Event event = bo.getEvent(eventEdition.eventId);
+		if (eventEdition.sport == null)
+		    eventEdition.sport = event.getDefaultSport();
+		if (eventEdition.type == null){
+		    eventEdition.type = event.getDefaultType();
+		}
+	    }
+	    return new EventEditionDTO(bo.persistEventEdition(eventEdition.createEventEdition()));
+	}
+	else 
+	    return new EventEditionDTO();
+    }
+    
     /**
      * @param id
      * @param name
@@ -96,6 +159,7 @@ public class AdminRS {
     @GET
     @Path("/persistEventEditiondef/{id},{eventId},{date},{name}")
     @Produces(MediaType.APPLICATION_JSON)
+    @Deprecated
     public EventEdition persistEventEditionService(
         	@PathParam("id") String id,
         	@PathParam("eventId") String eventId,
@@ -117,6 +181,7 @@ public class AdminRS {
     @GET
     @Path("/persistEventEdition/{id},{eventId},{date},{name},{sport},{type}")
     @Produces(MediaType.APPLICATION_JSON)
+    @Deprecated
     public EventEdition persistEventEditionService(
 	    @PathParam("id") String id,
 	    @PathParam("eventId") String eventId,
@@ -133,7 +198,7 @@ public class AdminRS {
 	EventEdition eventEdition = null;
 	try {
 	    eventEdition = getEventEdition(id, eventId, date, name, sport, type);
-	} catch (LiveTrackingException e) {
+	} catch (LitracyException e) {
 	    log.error("Data input Error", e);
 	}
 	if (eventEdition!= null)
@@ -144,7 +209,7 @@ public class AdminRS {
 	}
     }
     
-    private EventEdition getEventEdition(String id, String eventId, String date, String name, String sport, String type) throws LiveTrackingException {
+    private EventEdition getEventEdition(String id, String eventId, String date, String name, String sport, String type) throws LitracyException {
 	EventEdition edition = null;
 	boolean validData = true;
 	if (eventId==null || eventId.isEmpty()){
@@ -174,40 +239,53 @@ public class AdminRS {
     @Path("/addParticipant/")
     @Consumes(MediaType.APPLICATION_JSON) 
     @Produces(MediaType.APPLICATION_JSON)
-    public Participant addParticipant(Participant participant) {
+    public ParticipantDTO addParticipant(ParticipantDTO participant) {
 	log.debug("participant: "+participant);
-	return bo.persistParticipant(participant);
+	Participant p = bo.persistParticipant(participant.createParticipant());
+	return new ParticipantDTO(p);
     }
 
     @PUT
     @Path("/updateParticipant/")
     @Consumes(MediaType.APPLICATION_JSON) 
     @Produces(MediaType.APPLICATION_JSON)
-    public Participant updateParticipant(Participant participant) {
+    public ParticipantDTO updateParticipant(ParticipantDTO participant) {
 	log.debug("participant: "+participant);
-	if (participant.getId() != null)
-	    return bo.persistParticipant(participant);
-	else
-	    return null;
+	if (participant.id != null){
+	    Participant p = bo.persistParticipant(participant.createParticipant());
+	    return new ParticipantDTO(p);
+	} else return null;
+    }
+    
+    @DELETE
+    @Path("/deleteParticipant/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Boolean deleteParticipant(@PathParam("id") String id) throws LitracyException{
+	log.debug("participantId: "+id);
+	if (id != null && !id.isEmpty()){
+	    return bo.deleteParticipant(Long.valueOf(id));
+	} else {
+	    return false;
+	}
     }
     
     @POST
     @Consumes(MediaType.APPLICATION_JSON) 
     @Produces(MediaType.APPLICATION_JSON) 
     @Path("/addPerson/")
-    public Person addPerson(Person person){
+    public PersonDTO addPerson(PersonDTO person){
 	log.debug(person.toString());
-	return bo.savePerson(person);
+	return new PersonDTO(bo.savePerson(person.createPerson()));
     }
     
     @PUT
     @Consumes(MediaType.APPLICATION_JSON) 
     @Produces(MediaType.APPLICATION_JSON) 
     @Path("/updatePerson/")
-    public Person updatePerson(Person person){
+    public PersonDTO updatePerson(PersonDTO person){
 	log.debug(person.toString());
-	if (person.getId() != null)
-	    return bo.savePerson(person);
+	if (person.id != null)
+	    return new PersonDTO(bo.savePerson(person.createPerson()));
 	else 
 	    return null;
     }

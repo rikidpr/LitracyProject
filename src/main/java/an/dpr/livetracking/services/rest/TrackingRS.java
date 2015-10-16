@@ -1,7 +1,9 @@
 package an.dpr.livetracking.services.rest;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -17,10 +19,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import an.dpr.livetracking.bean.GPSPoint;
 import an.dpr.livetracking.bean.GPSPoint.Builder;
-import an.dpr.livetracking.bean.TrackInfoList;
 import an.dpr.livetracking.bo.TrackingBO;
 import an.dpr.livetracking.domain.Participant;
 import an.dpr.livetracking.domain.TrackInfo;
+import an.dpr.livetracking.services.rest.dto.TrackInfoDTO;
+import an.dpr.livetracking.services.rest.dto.TrackInfoDTOList;
 
 
 @Path("tracking")
@@ -33,26 +36,50 @@ public class TrackingRS {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/postTrackInfo/")
-    public TrackInfo postTrackInfo(TrackInfo trackInfo){
+    public TrackInfo postTrackInfo(TrackInfoDTO trackInfo){
 	log.debug(trackInfo.toString());
-	return bo.persistTrackInfo(trackInfo);
+	return bo.persistTrackInfo(getTrackInfo(trackInfo));
+    }
+    
+    private TrackInfo getTrackInfo(TrackInfoDTO dto) {
+	log.debug("inicio");
+	TrackInfo bean = null;
+	//if (validateInputTrackInfo(dto.latitude, dto.longitude, dto.timestamp, dto.participantId, dto.referenceSystem)){
+	    bean = new TrackInfo();
+	    Builder builder = new GPSPoint.Builder();
+	    GPSPoint point = builder.setLat(dto.latitude).setLon(dto.longitude).setReferenceSystem(dto.referenceSystem).build();
+	    bean.setGpsPoint(point);
+	    bean.setDate(new Date(dto.timestamp));
+	    Participant participant = new Participant();	
+	    participant.setId(dto.participantId);
+	    bean.setParticipant(participant);
+	//}
+	return bean;
     }
     
     
     /**
      * Return the number of track list persisted
-     * @param trackInfoList
+     * @param trackInfoDTOList
      * @return
      */
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/postTrackInfoList/")
-    public Integer postTrackInfoList(TrackInfoList trackInfoList){
-	log.debug(trackInfoList.toString());
-	return bo.persistTrackInfoList(trackInfoList.getTrackInfoList());
+    public Integer postTrackInfoList(TrackInfoDTOList trackInfoDTOList){
+	log.debug(trackInfoDTOList.toString());
+	return bo.persistTrackInfoList(getTrackInfoList(trackInfoDTOList));
     }
     
+    private List<TrackInfo> getTrackInfoList(TrackInfoDTOList trackInfoDTOList) {
+	List<TrackInfo> list = new ArrayList<TrackInfo>();
+	for (TrackInfoDTO dto : trackInfoDTOList.getList()){
+	    list.add(getTrackInfo(dto));
+	}
+	return list;
+    }
+
     /**
      * Carga de unico trackinfo, para app movil
      */

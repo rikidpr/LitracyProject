@@ -14,15 +14,11 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import an.dpr.livetracking.bean.GPSPoint;
-import an.dpr.livetracking.bean.GPSPoint.Builder;
 import an.dpr.livetracking.bean.Gender;
-import an.dpr.livetracking.bean.TrackInfoList;
-import an.dpr.livetracking.domain.EventEdition;
-import an.dpr.livetracking.domain.Participant;
-import an.dpr.livetracking.domain.ParticipantType;
-import an.dpr.livetracking.domain.Person;
-import an.dpr.livetracking.domain.TrackInfo;
+import an.dpr.livetracking.services.rest.dto.ParticipantDTO;
+import an.dpr.livetracking.services.rest.dto.PersonDTO;
+import an.dpr.livetracking.services.rest.dto.TrackInfoDTO;
+import an.dpr.livetracking.services.rest.dto.TrackInfoDTOList;
 
 public class Tests {
 
@@ -36,108 +32,128 @@ public class Tests {
 //	updatePerson();
 //	addParticipant();
 //	updateParticipant();
-//	postTrackInfo();
-	postTrackInfoList();
+	deleteParticipant();
+//	postTrackInfoDTO();
+//	postTrackInfoDTOList();
     }
     
-    private static void postTrackInfo() throws Exception{
+    private static void postTrackInfoDTO() throws Exception{
 	StringBuilder surl = new StringBuilder(BASE_URL).append("/tracking/postTrackInfo/");//POST
-	TrackInfo bean = new TrackInfo();
-	Builder builder = new GPSPoint.Builder();
-	GPSPoint point = builder.setLat(new BigDecimal(0.9872345656)).setLon(new BigDecimal(41.23698513398)).build();
-	bean.setGpsPoint(point);
-	bean.setDate(new Date());
-	Participant participant = new Participant();	
-	participant.setId(Long.valueOf(8));
-	bean.setParticipant(participant);
-	saveObject(surl.toString(), "POST", bean);
+	TrackInfoDTO dto = new TrackInfoDTO();
+	dto.latitude = new BigDecimal(0.9872345656);
+	dto.longitude = new BigDecimal(41.23698513398);
+	dto.timestamp = new Date().getTime();
+	dto.participantId = Long.valueOf(10);
+	dto.referenceSystem = "wgs84";
+//	ObjectMapper mapper = new ObjectMapper();
+//	String personjson =mapper.writeValueAsString(dto);
+//	log.debug(personjson);
+	saveObject(surl.toString(), "POST", dto);
     }
     
-    private static void postTrackInfoList() throws Exception{
+    private static void postTrackInfoDTOList() throws Exception{
 	StringBuilder surl = new StringBuilder(BASE_URL).append("/tracking/postTrackInfoList/");//POST
-	TrackInfoList list = new TrackInfoList();
+	TrackInfoDTOList list = new TrackInfoDTOList();
 	
-	TrackInfo bean = new TrackInfo();
-	Builder builder = new GPSPoint.Builder();
-	GPSPoint point = builder.setLat(new BigDecimal(0.9872345656)).setLon(new BigDecimal(41.23698513398)).build();
-	bean.setGpsPoint(point);
-	bean.setDate(new Date());
-	Participant participant = new Participant();	
-	participant.setId(Long.valueOf(8));
-	bean.setParticipant(participant);
-	list.getTrackInfoList().add(bean);
+	TrackInfoDTO dto = new TrackInfoDTO();
+	dto.latitude = new BigDecimal(0.9872345656);
+	dto.longitude = new BigDecimal(41.23698513398);
+	dto.timestamp = new Date().getTime();
+	dto.participantId = Long.valueOf(8);
+	dto.referenceSystem = "wgs84";
+	list.add(dto);
+	
+	dto = new TrackInfoDTO();
+	dto.latitude = new BigDecimal(0.97444444);
+	dto.longitude = new BigDecimal(41.211111111111);
+	dto.timestamp = new Date().getTime();
+	dto.participantId = Long.valueOf(10);
+	dto.referenceSystem = "wgs84";
+	list.add(dto);
 
-	bean = new TrackInfo();
-	point = builder.setLat(new BigDecimal(0.97444444)).setLon(new BigDecimal(41.211111111111)).build();
-	bean.setGpsPoint(point);
-	bean.setDate(new Date());
-	participant = new Participant();	
-	participant.setId(Long.valueOf(10));
-	bean.setParticipant(participant);
-	list.getTrackInfoList().add(bean);
-	
 	saveObject(surl.toString(), "POST", list);
     }
     
     private static void addParticipant() throws Exception {
 	StringBuilder surl = new StringBuilder(BASE_URL).append("/admin/addParticipant/");//POST
 	String httpMethod="POST";
-	Participant p = new Participant();
-	p.setDorsal(25);
-	EventEdition eventEdition = new EventEdition();
-	eventEdition.setId(5L);
-	p.setEventEdition(eventEdition );
-	Person person = new Person();
-	person.setId(7L);
-	p.setPerson(person);
-	ParticipantType ptype = new ParticipantType();
-	ptype.setId(1L);
-	p.setType(ptype );
+	ParticipantDTO p = new ParticipantDTO();
+	p.dorsal=27;
+	p.eventEditionId=5l;
+	p.personId = 18l;
+	p.typeId = 1L;
 	saveObject(surl.toString(), httpMethod, p);
     }
     
     private static void updateParticipant() throws Exception {
 	StringBuilder surl = new StringBuilder(BASE_URL).append("/admin/updateParticipant/");//PUT
 	String httpMethod="PUT";
-	Participant p = new Participant();
-	p.setId(10L);
-	p.setDorsal(25);
-	EventEdition eventEdition = new EventEdition();
-	eventEdition.setId(5L);
-	p.setEventEdition(eventEdition );
-	Person person = new Person();
-	person.setId(11L);
-	p.setPerson(person);
-	ParticipantType ptype = new ParticipantType();
-	ptype.setId(1L);
-	p.setType(ptype );
+	ParticipantDTO p = new ParticipantDTO();
+	p.id=156L;
+	p.dorsal=28;
+	p.eventEditionId=5l;
+	p.personId = 18l;
+	p.typeId = 1L;
 	saveObject(surl.toString(), httpMethod, p);
+    }
+    
+    private static void deleteParticipant() throws Exception {
+	StringBuilder surl = new StringBuilder(BASE_URL).append("/admin/deleteParticipant/");//PUT
+	String httpMethod="DELETE";
+//	ParticipantDTO p = new ParticipantDTO();
+//	p.id=21L;
+	deleteObject(surl.toString(), "");
+    }
+    
+    private static void deleteObject(String pUrl, String id) throws Exception {
+	URL url = new URL(pUrl+id);
+	HttpURLConnection uc = (HttpURLConnection) url.openConnection();
+	uc.setRequestProperty ("Authorization", "Bearer fulanakoTokenDeAcceso");
+	uc.setRequestMethod("DELETE");
+	try {
+	    uc.connect();
+	    System.out.println(uc.getResponseCode());
+	    System.out.println(uc.getResponseMessage());
+	    if (uc.getResponseCode() == 200) {
+		InputStream is = uc.getInputStream();
+		BufferedReader br = new BufferedReader(new InputStreamReader(is));
+		String linea;
+		StringBuilder tema = new StringBuilder();
+		while((linea = br.readLine())!=null){
+		    tema.append(linea);
+		}
+		System.out.println(tema.toString());
+		
+	    }
+	} catch (Exception e) {
+	    e.printStackTrace();
+	}
     }
     
     private static void addPerson() throws Exception {
 	StringBuilder surl = new StringBuilder(BASE_URL).append("/admin/addPerson/");//POST
 	String httpMethod="POST";
-	Person p = new Person();
-	p.setBirthDate(Calendar.getInstance().getTime());
-	p.setClub("enbizzi");
-	p.setDocument("25456789A");
-	p.setGender(Gender.FEMALE);
-	p.setName("Fulanita");
-	p.setSurname("De tal");
+	PersonDTO p = new PersonDTO();
+	p.birthDate = Calendar.getInstance().getTimeInMillis();
+	p.club = "tubular";
+	p.document="25456111B";
+	p.gender=Gender.MALE;
+	p.name="Juancha";
+	p.surname="Cigarrer";
 	saveObject(surl.toString(), httpMethod, p);
     }
     
     private static void updatePerson() throws Exception {
 	StringBuilder surl = new StringBuilder(BASE_URL).append("/admin/updatePerson/");//PUT
 	String httpMethod="PUT";
-	Person p = new Person();
-	p.setId(7L);
-	p.setBirthDate(Calendar.getInstance().getTime());
-	p.setClub("enbizZi cc");
-	p.setDocument("25456780H");
-	p.setGender(Gender.MALE);
-	p.setName("Fulanito");
-	p.setSurname("De cual");
+	PersonDTO p = new PersonDTO();
+	p.id =18L;
+	p.birthDate = Calendar.getInstance().getTimeInMillis();
+	p.club = "Tubular";
+	p.document="25456111B";
+	p.gender=Gender.FEMALE;
+	p.name="Juanchita";
+	p.surname="Filter";
 	saveObject(surl.toString(), httpMethod, p);
     }
     
