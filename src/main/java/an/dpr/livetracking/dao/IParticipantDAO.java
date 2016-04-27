@@ -5,6 +5,7 @@ import java.util.List;
 import an.dpr.livetracking.domain.EventEdition;
 import an.dpr.livetracking.domain.Participant;
 import an.dpr.livetracking.domain.Person;
+import an.dpr.livetracking.services.rest.dto.PersonDTO;
 
 /**
  * DAO for participants info. Person, Participant, ParticipantType...
@@ -15,7 +16,7 @@ public interface IParticipantDAO {
 
     Participant getParticipant(Long participantId);
     
-    Participant persistParticipant(Participant participant);
+    Participant saveParticipant(Participant participant);
     
     void deleteParticipant(Long participantId);
     
@@ -23,7 +24,9 @@ public interface IParticipantDAO {
     
     Person getPerson(Long personId);
     
-    Person persistPerson(Person person);
+    Person savePerson(Person person);
     
     void deletePerson(Long personId);
+
+    List<Person> getPersonsByDocument(String document);
 }

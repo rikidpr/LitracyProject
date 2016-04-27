@@ -1,10 +1,10 @@
 package an.dpr.livetracking.services.rest;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -14,31 +14,31 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import an.dpr.livetracking.bean.GPSPoint;
 import an.dpr.livetracking.bean.GPSPoint.Builder;
-import an.dpr.livetracking.bo.TrackingBO;
 import an.dpr.livetracking.domain.Participant;
 import an.dpr.livetracking.domain.TrackInfo;
+import an.dpr.livetracking.ejb.TrackingEJB;
+import an.dpr.livetracking.exception.LitracyException;
 import an.dpr.livetracking.services.rest.dto.TrackInfoDTO;
 import an.dpr.livetracking.services.rest.dto.TrackInfoDTOList;
+import an.dpr.livetracking.services.rest.dto.TrackPointDTOList;
 
 
 @Path("tracking")
 public class TrackingRS {
     
-    private static final Logger log = LoggerFactory.getLogger(TrackingRS.class);
-    @Autowired private TrackingBO bo;
+    @Inject private Logger log;
+    @Inject private TrackingEJB ejb;
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/postTrackInfo/")
-    public TrackInfo postTrackInfo(TrackInfoDTO trackInfo){
+    public TrackInfoDTO postTrackInfo(TrackInfoDTO trackInfo) throws LitracyException{
 	log.debug(trackInfo.toString());
-	return bo.persistTrackInfo(getTrackInfo(trackInfo));
+	return new TrackInfoDTO(ejb.persistTrackInfo(getTrackInfo(trackInfo)));
     }
     
     private TrackInfo getTrackInfo(TrackInfoDTO dto) {
@@ -69,7 +69,7 @@ public class TrackingRS {
     @Path("/postTrackInfoList/")
     public Integer postTrackInfoList(TrackInfoDTOList trackInfoDTOList){
 	log.debug(trackInfoDTOList.toString());
-	return bo.persistTrackInfoList(getTrackInfoList(trackInfoDTOList));
+	return ejb.persistTrackInfoList(getTrackInfoList(trackInfoDTOList));
     }
     
     private List<TrackInfo> getTrackInfoList(TrackInfoDTOList trackInfoDTOList) {
@@ -81,60 +81,6 @@ public class TrackingRS {
     }
 
     /**
-     * Carga de unico trackinfo, para app movil
-     */
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/trackInfo/{lat},{lon},{timestamp},{participantId}")
-    @Deprecated //TODO USE POST METHOD, THIS IS ONLY FOR TESTS
-    public TrackInfo setTrackInfo(
-	    @PathParam("lat") String lat,
-	    @PathParam("lon") String lon,
-	    @PathParam("timestamp") String timestamp,
-	    @PathParam("participantId") String participantId
-	    ) {
-	log.debug("inicio");
-	TrackInfo trackInfo = createTrackInfo(lat, lon, timestamp, participantId);
-	return bo.persistTrackInfo(trackInfo);
-    }
-
-    @Deprecated
-    private TrackInfo createTrackInfo(String lat, String lon, String timestamp, String participantId) {
-	log.debug("inicio");
-	TrackInfo bean = null;
-	if (validateInputTrackInfo(lat, lon, timestamp, participantId)){
-	    bean = new TrackInfo();
-	    Builder builder = new GPSPoint.Builder();
-	    GPSPoint point = builder.setLat(new BigDecimal(lat)).setLon(new BigDecimal(lon)).build();
-	    bean.setGpsPoint(point);
-	    bean.setDate(new Date(Long.valueOf(timestamp)));
-	    Participant participant = new Participant();	
-	    participant.setId(Long.valueOf(participantId));
-	    bean.setParticipant(participant);
-	}
-	return bean;
-    }
-
-    /**
-     * Validacion de datos correctos de un trackInfo
-     * @param lat
-     * @param lon
-     * @param timestamp
-     * @param participantId
-     * @return
-     */
-    @Deprecated
-    private boolean validateInputTrackInfo(String lat, String lon, String timestamp, String participantId) {
-	boolean valido = false;
-	
-	//TODO VALIDAR EFECTIVAMENTE!
-	valido = true;//CASTAÑA
-	
-	log.debug("Resultado validacion:"+valido);
-	return valido;
-    }
-    
-    /**
      *
      * cARGA DE MUCHOS A LA VEZ (PARA ESTACION)
     @POST
@@ -144,5 +90,61 @@ public class TrackingRS {
 	TODO
     }
      */
+    
+    /**
+     * Return the number of track list persisted
+     * @param trackInfoDTOList
+     * @return
+     */
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/getParticipantPoints/{participantId}")
+    public TrackInfoDTOList getParticipantPoints(@PathParam("participantId") String participantId){
+	log.debug("listado para participantId "+participantId);
+	TrackInfoDTOList ret = new TrackInfoDTOList();
+	ret.add(ejb.getParticipantPoints(Long.valueOf(participantId)));
+	return ret;
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_XML)
+    @Path("/getParticipantPointsXML/{participantId}")
+    public TrackInfoDTOList getParticipantPointsXML(@PathParam("participantId") String participantId){
+	log.debug("listado para participantId "+participantId);
+	TrackInfoDTOList ret = new TrackInfoDTOList();
+	ret.add(ejb.getParticipantPoints(Long.valueOf(participantId)));
+	return ret;
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_XML)
+    @Path("/getEventEditionPointsXML/{eventEditionId}")
+    public TrackInfoDTOList getEventEditionPointsXML(@PathParam("eventEditionId") String eventEditionId){
+	log.debug("listado para eventEditionId "+eventEditionId);
+	TrackInfoDTOList ret = new TrackInfoDTOList();
+	ret.add(ejb.getEventEditionPoints(Long.valueOf(eventEditionId)));
+	return ret;
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/getEventEditionRoute/{eventEditionId}")
+    public TrackPointDTOList getEventEditionRoute(@PathParam("eventEditionId") String eventEditionId){
+	return getEventEditionRoute(Long.valueOf(eventEditionId));
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_XML)
+    @Path("/getEventEditionRouteXML/{eventEditionId}")
+    public TrackPointDTOList getEventEditionRouteXML(@PathParam("eventEditionId") String eventEditionId){
+	return getEventEditionRoute(Long.valueOf(eventEditionId));
+    }
+    
+    private TrackPointDTOList getEventEditionRoute(Long eventEditionId){
+	log.debug("listado de tracks de la ruta de un eventEditionId "+eventEditionId);
+	TrackPointDTOList ret = new TrackPointDTOList();
+	ret.add(ejb.getEventEditionRoute(eventEditionId, 0,null));
+	return ret;
+    }
 }
 

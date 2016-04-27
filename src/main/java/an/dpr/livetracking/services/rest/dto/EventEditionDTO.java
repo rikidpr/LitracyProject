@@ -6,6 +6,7 @@ import an.dpr.livetracking.bean.EventType;
 import an.dpr.livetracking.bean.Sport;
 import an.dpr.livetracking.domain.Event;
 import an.dpr.livetracking.domain.EventEdition;
+import an.dpr.livetracking.domain.Participant;
 
 public class EventEditionDTO {
 
@@ -15,6 +16,7 @@ public class EventEditionDTO {
     public String name;
     public Sport sport;
     public EventType type;
+    public ParticipantDTOList participants;
     
     public EventEditionDTO(){}
 
@@ -25,6 +27,12 @@ public class EventEditionDTO {
 	name = e.getName();
 	sport = e.getSport();
 	type = e.getType();
+	if (e.getParticipants() != null){
+	    participants = new ParticipantDTOList();
+	    for (Participant p : e.getParticipants()){
+		participants.add(new ParticipantDTO(p));
+	    }
+	}
     }
     
     public EventEdition createEventEdition(){

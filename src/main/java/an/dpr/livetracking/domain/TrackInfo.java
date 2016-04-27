@@ -11,20 +11,27 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
 
 import an.dpr.livetracking.bean.GPSPoint;
+import an.dpr.livetracking.bean.LocationReferenceSystem;
 
 @Entity
-@Table
+@Table(uniqueConstraints={
+	@UniqueConstraint(columnNames = {"date" , "participant_id"}),
+	@UniqueConstraint(columnNames = {"participant_id", "trackpoint_id"})
+	})
 public class TrackInfo {
     private Long id;
     private Date date;
     private Participant participant;
     private BigDecimal lat;
     private BigDecimal lon;
-    private String referenceSystem;// utm30n, wgs84 TODO enum!
-
-
+    private LocationReferenceSystem referenceSystem;
+    /**
+     * Trackpoint del evento con el que se corresponderia por cercania esta posicion
+     */
+    private TrackPoint trackPoint;
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
@@ -88,19 +95,30 @@ public class TrackInfo {
     }
 
     @Column
-    public String getReferenceSystem() {
+    public LocationReferenceSystem getReferenceSystem() {
         return referenceSystem;
     }
 
-    public void setReferenceSystem(String referenceSystem) {
+    public void setReferenceSystem(LocationReferenceSystem referenceSystem) {
         this.referenceSystem = referenceSystem;
+    }
+    
+    @OneToOne(optional=true)
+    public TrackPoint getTrackPoint() {
+        return trackPoint;
+    }
+
+    public void setTrackPoint(TrackPoint trackPoint) {
+        this.trackPoint = trackPoint;
     }
 
 
     @Override
     public String toString() {
-	return "TrackInfo [id=" + id + ", date=" + date + ", participant=" + participant + ", lat=" + lat + ", lon="
-		+ lon + ", referenceSystem=" + referenceSystem + "]";
+	return "TrackInfo [id=" + id + ", date=" + date + ", participant="
+		+ participant + ", lat=" + lat + ", lon=" + lon
+		+ ", referenceSystem=" + referenceSystem + ", trackPoint="
+		+ trackPoint + "]";
     }
 
 }

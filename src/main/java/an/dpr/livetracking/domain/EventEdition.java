@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,6 +20,13 @@ import an.dpr.livetracking.bean.Sport;
 @Table
 public class EventEdition {
 
+    @Override
+    public String toString() {
+	return "EventEdition [id=" + id + ", event=" + event + ", date=" + date
+		+ ", name=" + name + ", participants=" + participants
+		+ ", sport=" + sport + ", type=" + type + "]";
+    }
+
     private Long id;
     private Event event;
     private Date date;
@@ -26,6 +34,12 @@ public class EventEdition {
     private List<Participant> participants;
     private Sport sport;
     private EventType type;
+    /**
+     * Puntos gps de los que esta compuesta la edicion
+     * Nos van a servir para aproximar las posiciones que nos envien los dispositivos, estimar
+     * pasos intermedios y crear el sistema de diferencias entre riders.
+     */
+//    private List<TrackPoint> trackPoints;
 
 
     @Id
@@ -66,7 +80,7 @@ public class EventEdition {
 	this.name = name;
     }
 
-    @OneToMany
+    @OneToMany(fetch=FetchType.EAGER)
     public List<Participant> getParticipants() {
 	return participants;
     }

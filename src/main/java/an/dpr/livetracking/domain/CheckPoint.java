@@ -12,18 +12,28 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import an.dpr.livetracking.bean.GPSPoint;
+import an.dpr.livetracking.bean.LocationReferenceSystem;
 
-@Entity
+@Entity 
 @Table
 public class CheckPoint {
 
     private Long id;
-    private EventEdition event;
+    /**
+     * Indica si es el checkpoint principal, el que se usara de referencia para los mapas, la salida/meta.
+     */
+    private Boolean main; 
+
+    /** Los checkpoint son por evento, y no por eventoEdition para que pueda la peña comparar pasos en varias ediciones
+     * Habra que crear una relacion checkpoint-edition para indicar las ediciones donde este checkpoint se ha usado 
+     * debido a cambios tipo nuevos puntos, descartes (por poca conectividad, por ej), cambios de recorrido, distintas disciplinas...
+     */
+    private Event event;
     private String name;
-    private int order;
+    //private int order;//esto deberia ir en la relacion checkpoint-eventedition
     private BigDecimal lat;
     private BigDecimal lon;
-    private String referenceSystem;// utm30n, wgs84 TODO enum!
+    private LocationReferenceSystem referenceSystem;// utm30n, wgs84 TODO enum!
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
@@ -37,11 +47,11 @@ public class CheckPoint {
     }
 
     @ManyToOne
-    public EventEdition getEvent() {
+    public Event getEvent() {
 	return event;
     }
 
-    public void setEvent(EventEdition event) {
+    public void setEvent(Event event) {
 	this.event = event;
     }
 
@@ -67,15 +77,6 @@ public class CheckPoint {
     }
 
     @Column
-    public int getOrder() {
-	return order;
-    }
-
-    public void setOrder(int order) {
-	this.order = order;
-    }
-
-    @Column
     public BigDecimal getLat() {
         return lat;
     }
@@ -94,12 +95,20 @@ public class CheckPoint {
     }
 
     @Column
-    public String getReferenceSystem() {
+    public LocationReferenceSystem getReferenceSystem() {
         return referenceSystem;
     }
 
-    public void setReferenceSystem(String referenceSystem) {
+    public void setReferenceSystem(LocationReferenceSystem referenceSystem) {
         this.referenceSystem = referenceSystem;
     }
 
+    @Column
+    public Boolean getMain() {
+	return main;
+    }
+    
+    public void setMain(Boolean main) {
+	this.main = main;
+    }
 }

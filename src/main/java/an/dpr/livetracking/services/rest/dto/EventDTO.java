@@ -1,5 +1,7 @@
 package an.dpr.livetracking.services.rest.dto;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import an.dpr.livetracking.bean.EventType;
 import an.dpr.livetracking.bean.Sport;
 import an.dpr.livetracking.domain.Event;
@@ -34,10 +36,19 @@ public class EventDTO {
 	return e;
     }
     
+    public Event modifyEvent(Event event) {
+	event.setName(name);
+	event.setDescription(description);
+	event.setDefaultSport(defaultSport);
+	event.setDefaultType(defaultType);
+	return event;
+    }
+    
     @Override
     public String toString() {
 	return "EventDTO [id=" + id + ", name=" + name + ", description=" + description + ", defaultSport="
 		+ defaultSport + ", defaultType=" + defaultType + "]";
     }
+
     
 }

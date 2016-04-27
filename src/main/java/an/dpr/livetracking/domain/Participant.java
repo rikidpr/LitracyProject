@@ -12,6 +12,18 @@ import javax.persistence.Table;
 @Entity
 @Table
 public class Participant {
+    @Override
+    public String toString() {
+	return "Participant [id=" + id + ", person=" + person + ", dorsal="
+		+ dorsal + ", type=" + type + 
+		", eventEditionId=" + (eventEdition!=null ? ""+eventEdition.getId() : "null" )
+			+ "]";
+    }
+    
+    public static void main(String...args){
+	System.out.println(new Participant().toString());
+    }
+    
     private Long id;
     private Person person;
     private int dorsal;

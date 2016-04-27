@@ -4,6 +4,8 @@ import java.util.List;
 
 import an.dpr.livetracking.bean.EventEditionSearch;
 import an.dpr.livetracking.bean.EventSearch;
+import an.dpr.livetracking.bean.EventType;
+import an.dpr.livetracking.bean.Sport;
 import an.dpr.livetracking.domain.Event;
 import an.dpr.livetracking.domain.EventEdition;
 
@@ -14,7 +16,7 @@ import an.dpr.livetracking.domain.EventEdition;
  */
 public interface IEventDAO {
 
-    Event persistEvent(Event event);
+    Event saveEvent(Event event);
     
     void deleteEvent(Long eventId);
     
@@ -22,7 +24,13 @@ public interface IEventDAO {
     
     List<Event> getEvents(EventSearch es);
     
-    EventEdition persistEventEdition(EventEdition edition);
+    List<Event> getEventsByName(String name);
+
+    List<Event> getEventsBySport(Sport sport);
+    
+    List<Event> getEventsByType(EventType type);
+    
+    EventEdition saveEventEdition(EventEdition edition);
     
     void deleteEventEdition(Long editionId);
     

@@ -8,7 +8,7 @@ public class GPSPoint {
 
     private BigDecimal lat;
     private BigDecimal lon;
-    private String referenceSystem;// utm30n, wgs84 TODO enum!
+    private LocationReferenceSystem referenceSystem;// utm30n, wgs84 TODO enum!
 
     public BigDecimal getLat() {
 	return lat;
@@ -26,24 +26,24 @@ public class GPSPoint {
 	this.lon = lon;
     }
 
-    public String getReferenceSystem() {
+    public LocationReferenceSystem getReferenceSystem() {
 	return referenceSystem;
     }
 
-    public void setReferenceSystem(String referenceSystem) {
+    public void setReferenceSystem(LocationReferenceSystem referenceSystem) {
 	this.referenceSystem = referenceSystem;
     }
     
     public static class Builder {
 	private BigDecimal lat;
 	private BigDecimal lon;
-	private String referenceSystem;// utm30n, wgs84 TODO enum!
+	private LocationReferenceSystem referenceSystem;// utm30n, wgs84 TODO enum!
 	
 	public GPSPoint build(){
 	    GPSPoint point = new GPSPoint();
 	    point.setLat(lat);
 	    point.setLon(lon);
-	    point.setReferenceSystem(referenceSystem != null ? referenceSystem : Contracts.UTM30N);
+	    point.setReferenceSystem(referenceSystem != null ? referenceSystem : LocationReferenceSystem.WGS84);
 	    return point;
 	}
 	
@@ -57,7 +57,7 @@ public class GPSPoint {
 	    return this;
 	}
 	
-	public Builder setReferenceSystem(String rs){
+	public Builder setReferenceSystem(LocationReferenceSystem rs){
 	    this.referenceSystem = rs;
 	    return this;
 	}

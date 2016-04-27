@@ -8,6 +8,7 @@ import an.dpr.livetracking.domain.Person;
 public class ParticipantDTO {
     public Long id;
     public Long personId;
+    public PersonDTO person;
     public Integer dorsal;
     public Long typeId;
     public Long eventEditionId;
@@ -20,6 +21,8 @@ public class ParticipantDTO {
 	dorsal = p.getDorsal();
 	typeId = p.getType()!= null ? p.getType().getId() : null;
 	eventEditionId = p.getEventEdition() != null ? p.getEventEdition().getId() : null;
+	if (p.getPerson() != null)
+	    person = new PersonDTO(p.getPerson());
     }
     
     public Participant createParticipant(){
